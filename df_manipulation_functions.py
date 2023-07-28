@@ -108,22 +108,16 @@ def get_similarity_to_mean_year(original_station_data, Wert):
     #calculate mean year
     mean_year = get_daily_averaged_df(original_station_data['Stationsnummer'].iloc[0], original_station_data)
     
-    #shorten mean year to 365 days
-    # mean_year = mean_year.iloc[:360]
-
-
     original_station_data['Zeitstempel'] = pd.to_datetime(original_station_data.Zeitstempel)
     
     #calculate similarity of each year to the mean year
     sum_of_differences = 0
     # group the original data by year
     
-    for year, group in original_station_data.groupby(original_station_data.Zeitstempel.dt.year):
-        # calculate difference between each day of the year and the mean year
-        # shorten every year to 365 days
-        # group = group.iloc[:360]
-        #calculate the difference with being sensible to difference in array length
-        difference = np.sum(np.abs(group[Wert].values - mean_year[Wert].values[:len(group[Wert].values)])) 
+  
+    for group in original_station_data.groupby(original_station_data.Zeitstempel.dt.year):
+        # calculate the difference between the group and the mean year normalized by the mean of the data
+        difference = (np.sum(np.abs(group[Wert].values - mean_year[Wert].values[:len(group[Wert].values)])))/mean_year.mean()
         # add these differences to the sum of differences
         sum_of_differences = sum_of_differences+difference
     return sum_of_differences

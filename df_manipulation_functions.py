@@ -130,7 +130,7 @@ def get_similarity_to_mean_year(original_station_data, Wert):
     return sum_of_differences
 
 def get_max_slope(station_data, Wert, days):
-    #calculate difference between following days of the FlowWert
+    #calculate difference between following days of the Wert
     slope = []
     for i in range(len(station_data)-days-2):
         slope.append(station_data[Wert][i+2]-station_data[Wert][i+2+days])#sketchy thingy
@@ -140,10 +140,26 @@ def get_max_slope(station_data, Wert, days):
 
     return max_slope
 
+def get_min_slope(station_data, Wert, days):
+    #calculate difference between following days of the Wert
+    slope = []
+    for i in range(len(station_data)-days-2):
+        slope.append(station_data[Wert][i+2]-station_data[Wert][i+2+days])#sketchy thingy
+    
+    array = np.array(slope)
+    min_slope = np.nanmin(array)
+
+    return min_slope
+
 def get_day_of_max(station_df, Wert):
     #get index of the day with the highest value
     day_of_max = station_df[Wert].idxmax()
     return day_of_max
+
+def get_day_of_min(station_df, Wert):
+    #get index of the day with the highest value
+    day_of_min = station_df[Wert].idxmin()
+    return day_of_min
     
 
 
@@ -173,14 +189,9 @@ def get_time_first_upward_crossing_mean(stations_df, Wert):
     #case 2: first value is greater than average
     else:
         first_upward_crossing = stations_df[stations_df[Wert] < average].index[-1]
-    
-
-
-
     return first_upward_crossing
 
     
-# not working correctly because of nan error
 def get_time_first_downward_crossing_mean(stations_df, Wert):
     #calculate average
     average = np.mean(stations_df[Wert])
@@ -191,9 +202,7 @@ def get_time_first_downward_crossing_mean(stations_df, Wert):
 
     #case 2: first value is greater than average
     else:
-        first_downward_crossing = stations_df[stations_df[Wert] > average].index[-1]
-    
-    
+        first_downward_crossing = stations_df[stations_df[Wert] > average].index[-1]  
     return first_downward_crossing
 
 def get_time_first_upward_crossing_highquantile(stations_df, Wert):
@@ -256,19 +265,6 @@ def get_time_first_downward_crossing_lowquantile(stations_df, Wert):
     return first_downward_crossing
 
     
-
-def get_number_of_maximas(station_data, Wert):
-    #get number of maximas
-    maximas = 0
-    for i in range(len(station_data)-15-2):
-        if station_data[Wert][i+2] > station_data[Wert][i+1] and station_data[Wert][i+2] > station_data[Wert][i+3]:
-            maximas += 1
-
-    # if maximas > 20:
-    #     maximas = -1
-    # else: 
-    #     maximas = 1
-    return maximas
 
 def get_sin_cos_rep(day_feature):
     sin = np.sin(day_feature/365 * 2* np.pi)

@@ -155,6 +155,11 @@ def get_day_of_max(station_df, Wert):
     #get index of the day with the highest value
     day_of_max = station_df[Wert].idxmax()
     return day_of_max
+
+def get_day_of_min(station_df, Wert):
+    #get index of the day with the highest value
+    day_of_min = station_df[Wert].idxmin()
+    return day_of_min
     
 
 

@@ -130,7 +130,7 @@ def get_similarity_to_mean_year(original_station_data, Wert):
     return sum_of_differences
 
 def get_max_slope(station_data, Wert, days):
-    #calculate difference between following days of the FlowWert
+    #calculate difference between following days of the Wert
     slope = []
     for i in range(len(station_data)-days-2):
         slope.append(station_data[Wert][i+2]-station_data[Wert][i+2+days])#sketchy thingy
@@ -139,6 +139,17 @@ def get_max_slope(station_data, Wert, days):
     max_slope = np.nanmax(array)
 
     return max_slope
+
+def get_min_slope(station_data, Wert, days):
+    #calculate difference between following days of the Wert
+    slope = []
+    for i in range(len(station_data)-days-2):
+        slope.append(station_data[Wert][i+2]-station_data[Wert][i+2+days])#sketchy thingy
+    
+    array = np.array(slope)
+    min_slope = np.nanmin(array)
+
+    return min_slope
 
 def get_day_of_max(station_df, Wert):
     #get index of the day with the highest value

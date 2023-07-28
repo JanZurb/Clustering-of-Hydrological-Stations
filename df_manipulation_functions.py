@@ -268,3 +268,10 @@ def get_number_of_maximas(station_data, Wert):
     # else: 
     #     maximas = 1
     return maximas
+
+def get_sin_cos_rep(day_feature):
+    sin = np.sin(day_feature/365 * 2* np.pi)
+    cos = np.cos(day_feature/365*2*np.pi)
+
+    return sin,cos
+

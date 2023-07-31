@@ -73,14 +73,27 @@ def get_running_mean_df(station_number, window, flow_temp_data, Wert):
     return daily_averaged_data
 
 
-def normalize_data(feature_df):
-    #standardize data
-    stationsnummer = feature_df['Stationsnummer']
-    feature_df = feature_df.drop(['Stationsnummer'], axis=1)
-    normalized_data = (feature_df - feature_df.mean()) / feature_df.std()
-    #add stationsnummer again
-    normalized_data['Stationsnummer'] = stationsnummer
-    return normalized_data
+def normalize_data(df):
+    result = df.copy()
+    for feature_name in df.columns:
+        #exclude feature_names that include 'day' or 'time' string
+        if feature_name.find('day') != -1:
+            continue
+        max_value = df[feature_name].max()
+        min_value = df[feature_name].min()
+        mean_value = df[feature_name].mean()
+        std_value = df[feature_name].std()
+        result[feature_name] = (df[feature_name] - mean_value) / (std_value)
+    return result
+
+# def normalize_data(feature_df):
+#     #standardize data
+#     stationsnummer = feature_df['Stationsnummer']
+#     feature_df = feature_df.drop(['Stationsnummer'], axis=1)
+#     normalized_data = (feature_df - feature_df.mean()) / feature_df.std()
+#     #add stationsnummer again
+#     normalized_data['Stationsnummer'] = stationsnummer
+#     return normalized_data
 
 def create_mds_represntation(normalized_data):
     stationsnummer = normalized_data['Stationsnummer']

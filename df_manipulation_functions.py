@@ -86,14 +86,15 @@ def normalize_data(df):
         result[feature_name] = (df[feature_name] - mean_value) / (std_value)
     return result
 
-# def normalize_data(feature_df):
-#     #standardize data
-#     stationsnummer = feature_df['Stationsnummer']
-#     feature_df = feature_df.drop(['Stationsnummer'], axis=1)
-#     normalized_data = (feature_df - feature_df.mean()) / feature_df.std()
-#     #add stationsnummer again
-#     normalized_data['Stationsnummer'] = stationsnummer
-#     return normalized_data
+def force_normalize_data(df):
+    result = df.copy()
+    for feature_name in df.columns:
+        mean_value = df[feature_name].mean()
+        std_value = df[feature_name].std()
+        result[feature_name] = (df[feature_name] - mean_value) / (std_value)
+    return result
+
+
 
 def create_mds_represntation(normalized_data):
     stationsnummer = normalized_data['Stationsnummer']

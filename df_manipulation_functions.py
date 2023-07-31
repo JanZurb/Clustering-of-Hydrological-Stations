@@ -77,7 +77,7 @@ def normalize_data(df):
     result = df.copy()
     for feature_name in df.columns:
         #exclude feature_names that include 'day' or 'time' string
-        if feature_name.find('day') != -1:
+        if feature_name.find('day') != -1 or feature_name.find('Stationsnummer')!= -1:
             continue
         max_value = df[feature_name].max()
         min_value = df[feature_name].min()

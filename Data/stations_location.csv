@@ -1,78 +1,78 @@
-Station_Nr;Station_Name;From_Node_X;From_Node_Y
-2473;Rhein-Diepoldsau, Rietbrücke;765094.1875;248446.8125
-2410;Liechtensteiner Binnenkanal-Ruggell;756288.125;230894.40625
-2150;Landquart-Felsenbach;766124.125;205068.5
-2414;Rietholzbach-Mosnang, Rietholz;718688.6875;248537.296875
-2374;Necker-Mogelsberg, Aachsäge;727404.125;247019.703125
-2308;Goldach-Goldach, Bleiche;752663.4375;261234.828125
-2126;Murg-Wängi;714116.375;261674.5
-2392;Rhein (Oberwasser)-Rheinau;687541.625;277105.0
-2288;Rhein-Neuhausen, Fluringerbrücke;689153.375;282130.1875
-2243;Limmat-Baden, Limmatpromenade;665733.375;258355.203125
-2044;Thur-Andelfingen;694129.8125;272578.59375
-2018;Reuss-Mellingen;663379.5625;251869.09375
-2143;Rhein-Rekingen;668683.375;269282.1875
-2415;Glatt-Rheinsfelden;678278.75;269328.5625
-2112;Sitter-Appenzell;749193.375;244018.78125
-2104;Linth-Weesen, Biäsche;725287.875;221378.90625
-2609;Alp-Einsiedeln;698959.625;223183.296875
-2604;Biber-Biberbrugg;697180.5;223207.296875
-2635;Grossbach-Einsiedeln, Gross;700704.75;218094.53125
-2481;Engelberger Aa-Buochs, Flugplatz;673223.8125;202517.59375
-2276;Grosstalbach-Isenthal;684311.875;196295.203125
-2084;Muota-Ingenbohl;688817.875;206464.5
-2056;Reuss-Seedorf;690248.0;192877.265625
-2634;Kleine Emme-Emmen;663488.1875;213797.921875
-2152;Reuss-Luzern, Geissmattbrücke;665639.5;211526.734375
-2617;Rom-Müstair;830743.625;168576.796875
-2327;Dischmabach-Davos, Kriegsmatte;786377.375;183267.5
-2462;Inn-S-chanf;795773.1875;165863.40625
-2366;Poschiavino-La Rösa;802093.875;142311.59375
-2256;Rosegbach-Pontresina;788802.1875;151059.09375
-2033;Vorderrhein-Ilanz;734885.125;182011.703125
-2623;Rhone-Oberwald;669885.6875;154105.203125
-2356;Riale di Calneggia-Cavergno, Pontit;684464.875;135367.703125
-2347;Riale di Roggiasca-Roveredo, Bacino di compenso;733614.625;117947.3984375
-2068;Ticino-Riazzino;713840.875;113622.296875
-2612;Riale di Pincascia-Lavertezzo;708645.625;124416.796875
-2091;Rhein-Rheinfelden, Messstation;627248.0;268145.5
-2016;Aare-Brugg;656857.125;259319.90625
-2130;Rhein (Oberwasser)-Laufenburg;645965.125;267538.90625
-2113;Aare-Felsenau, K.W. Klingnau;659098.625;271773.5
-2106;Birs-Münchenstein, Hofmatt;612686.875;261404.578125
-2434;Dünnern-Olten, Hammermühle;633794.25;243899.84375
-2343;Langeten-Huttwil, Häberenbad;629677.375;218783.796875
-2608;Sellenbodenbach-Neuenkirch;658208.125;217348.703125
-2070;Emme-Emmenmatt;623732.125;200061.5
-2282;Sperbelgraben-Wasen, Kurzeneialp;630752.1875;207402.203125
-2307;Suze-Sonceboz;579421.5;227475.296875
-2210;Doubs-Ocourt;572617.6875;244458.796875
-2029;Aare-Brügg, Aegerten;587439.6875;218521.109375
-2159;Gürbe-Belp, Mülimatt;604664.375;191901.0
-2179;Sense-Thörishaus, Sensematt;593427.6875;192948.703125
-2085;Aare-Hagneck;583141.875;210582.296875
-2500;Worble-Ittigen;603796.5;202324.90625
-2467;Saane-Gümmenen;585142.125;199217.140625
-2135;Aare-Bern, Schönau;601013.25;197984.3125
-2485;Allaine-Boncourt, Frontière;567964.6875;259802.359375
-2457;Aare-Ringgenberg, Goldswil;633918.875;171505.40625
-2019;Aare-Brienzwiler;650425.3125;177445.875
-2109;Lütschine-Gsteig;632836.0;167680.203125
-2269;Lonza-Blatten;629334.875;141082.203125
-2161;Massa-Blatten bei Naters;643855.6875;137432.796875
-2030;Aare-Thun;613461.375;178974.0
-2232;Allenbach-Adelboden;608359.875;148096.203125
-2351;Vispa-Visp;634205.1875;125252.703125
-2011;Rhône-Sion;593854.875;118719.8984375
-2369;Mentue-Yvonand, La Mauguettaz;545677.125;180835.90625
-2009;Rhône-Porte du Scex;558163.375;132319.203125
-2432;Venoge-Ecublens, Les Bois;531905.125;154868.40625
-2493;Promenthouse-Gland, Route Suisse;509085.6875;141079.0
-2433;Aubonne-Allaman, Le Coulet;520546.8125;148476.5
-2170;Arve-Genève, Bout du Monde;502159.40625;115212.796875
-2606;Rhône-Genève, Halle de l'ìle;500404.4375;118065.2265625
-2174;Rhône-Chancy, Aux Ripes;486932.5;113000.703125
-2372;Linth-Mollis, Linthbrücke;723213.375;215265.703125
-2167;Tresa-Ponte Tresa, Rocchetta;710109.125;91590.09375
-2034;Broye-Payerne, Caserne d'aviation;561472.5;185386.703125
-2386;Murg-Frauenfeld;709626.8125;269364.40625
+﻿Station_Nr,Station_Name,From_Node_X,From_Node_Y
+2009,Rhône-Porte du Scex,558163.375,132319.2031
+2016,Aare-Brugg,656857.125,259319.9063
+2018,Reuss-Mellingen,663379.5625,251869.0938
+2019,Aare-Brienzwiler,650425.3125,177445.875
+2029,"Aare-Brügg, Aegerten",587439.6875,218521.1094
+2030,Aare-Thun,613461.375,178974
+2033,Vorderrhein-Ilanz,734885.125,182011.7031
+2034,"Broye-Payerne, Caserne d'aviation",561472.5,185386.7031
+2044,Thur-Andelfingen,694129.8125,272578.5938
+2056,Reuss-Seedorf,690248,192877.2656
+2070,Emme-Emmenmatt,623732.125,200061.5
+2084,Muota-Ingenbohl,688817.875,206464.5
+2085,Aare-Hagneck,583141.875,210582.2969
+2091,"Rhein-Rheinfelden, Messstation",627248,268145.5
+2104,"Linth-Weesen, Biäsche",725287.875,221378.9063
+2106,"Birs-Münchenstein, Hofmatt",612686.875,261404.5781
+2109,Lütschine-Gsteig,632836,167680.2031
+2112,Sitter-Appenzell,749193.375,244018.7813
+2113,"Aare-Felsenau, K.W. Klingnau",659098.625,271773.5
+2126,Murg-Wängi,714116.375,261674.5
+2130,Rhein (Oberwasser)-Laufenburg,645965.125,267538.9063
+2135,"Aare-Bern, Schönau",601013.25,197984.3125
+2143,Rhein-Rekingen,668683.375,269282.1875
+2150,Landquart-Felsenbach,766124.125,205068.5
+2152,"Reuss-Luzern, Geissmattbrücke",665639.5,211526.7344
+2159,"Gürbe-Belp, Mülimatt",604664.375,191901
+2161,Massa-Blatten bei Naters,643855.6875,137432.7969
+2167,"Tresa-Ponte Tresa, Rocchetta",710109.125,91590.09375
+2170,"Arve-Genève, Bout du Monde",502159.4063,115212.7969
+2174,"Rhône-Chancy, Aux Ripes",486932.5,113000.7031
+2179,"Sense-Thörishaus, Sensematt",593427.6875,192948.7031
+2210,Doubs-Ocourt,572617.6875,244458.7969
+2232,Allenbach-Adelboden,608359.875,148096.2031
+2243,"Limmat-Baden, Limmatpromenade",665733.375,258355.2031
+2256,Rosegbach-Pontresina,788802.1875,151059.0938
+2269,Lonza-Blatten,629334.875,141082.2031
+2276,Grosstalbach-Isenthal,684311.875,196295.2031
+2282,"Sperbelgraben-Wasen, Kurzeneialp",630752.1875,207402.2031
+2288,"Rhein-Neuhausen, Fluringerbrücke",689153.375,282130.1875
+2307,Suze-Sonceboz,579421.5,227475.2969
+2308,"Goldach-Goldach, Bleiche",752663.4375,261234.8281
+2327,"Dischmabach-Davos, Kriegsmatte",786377.375,183267.5
+2343,"Langeten-Huttwil, Häberenbad",629677.375,218783.7969
+2347,"Riale di Roggiasca-Roveredo, Bacino di compenso",733614.625,117947.3984
+2351,Vispa-Visp,634205.1875,125252.7031
+2356,"Riale di Calneggia-Cavergno, Pontit",684464.875,135367.7031
+2366,Poschiavino-La Rösa,802093.875,142311.5938
+2369,"Mentue-Yvonand, La Mauguettaz",545677.125,180835.9063
+2372,"Linth-Mollis, Linthbrücke",723213.375,215265.7031
+2374,"Necker-Mogelsberg, Aachsäge",727404.125,247019.7031
+2386,Murg-Frauenfeld,709626.8125,269364.4063
+2392,Rhein (Oberwasser)-Rheinau,687541.625,277105
+2410,Liechtensteiner Binnenkanal-Ruggell,756288.125,230894.4063
+2414,"Rietholzbach-Mosnang, Rietholz",718688.6875,248537.2969
+2415,Glatt-Rheinsfelden,678278.75,269328.5625
+2432,"Venoge-Ecublens, Les Bois",531905.125,154868.4063
+2433,"Aubonne-Allaman, Le Coulet",520546.8125,148476.5
+2434,"Dünnern-Olten, Hammermühle",633794.25,243899.8438
+2457,"Aare-Ringgenberg, Goldswil",633918.875,171505.4063
+2462,Inn-S-chanf,795773.1875,165863.4063
+2467,Saane-Gümmenen,585142.125,199217.1406
+2473,"Rhein-Diepoldsau, Rietbrücke",765094.1875,248446.8125
+2481,"Engelberger Aa-Buochs, Flugplatz",673223.8125,202517.5938
+2485,"Allaine-Boncourt, Frontière",567964.6875,259802.3594
+2493,"Promenthouse-Gland, Route Suisse",509085.6875,141079
+2500,Worble-Ittigen,603796.5,202324.9063
+2604,Biber-Biberbrugg,697180.5,223207.2969
+2606,"Rhône-Genève, Halle de l'ìle",500404.4375,118065.2266
+2608,Sellenbodenbach-Neuenkirch,658208.125,217348.7031
+2609,Alp-Einsiedeln,698959.625,223183.2969
+2612,Riale di Pincascia-Lavertezzo,708645.625,124416.7969
+2617,Rom-Müstair,830743.625,168576.7969
+2623,Rhone-Oberwald,669885.6875,154105.2031
+2634,Kleine Emme-Emmen,663488.1875,213797.9219
+2635,"Grossbach-Einsiedeln, Gross",700704.75,218094.5313
+,,,
+,,,

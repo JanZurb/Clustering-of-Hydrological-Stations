@@ -69,8 +69,11 @@ def get_daily_averaged_df(station_number, flow_temp_data):
 
 def get_running_mean_df(station_number, window, flow_temp_data, Wert):
     daily_averaged_data = get_daily_averaged_df(station_number, flow_temp_data)
+    #add the last 15 days of the year to the beginning of the year
+    expanded_data = daily_averaged_data.iloc[-window+1:].append(daily_averaged_data)  
     daily_averaged_data[Wert] = daily_averaged_data[Wert].rolling(window=window).mean()
-    return daily_averaged_data
+    expanded_data = expanded_data.rolling(window=window).mean().dropna().reset_index(drop=True)
+    return expanded_data
 
 
 def normalize_data(df):

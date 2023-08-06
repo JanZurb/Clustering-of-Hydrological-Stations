@@ -105,7 +105,7 @@ def normalize_data(df):
             df.drop([feature_name], axis=1, inplace=True)
             continue
     #use robust scalar ro normalize the data
-    robust_scaler = RobustScaler(quantile_range=(10,90))
+    robust_scaler = RobustScaler(quantile_range=(5,95))
     robust_scaler.fit(df)
     normalized_data = robust_scaler.transform(df)
     normalized_data = pd.DataFrame(normalized_data, columns=df.columns)

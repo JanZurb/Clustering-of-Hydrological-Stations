@@ -200,7 +200,7 @@ def get_time_first_upward_crossing_mean(stations_df, Wert):
     
     #get first upward crossing of average
     #case 1: first value is already greater than average
-    if stations_df[Wert][15] < average:
+    if stations_df[Wert][0] < average:
         first_upward_crossing = stations_df[stations_df[Wert] > average].index[0]
 
     #case 2: first value is greater than average
@@ -214,7 +214,7 @@ def get_time_first_downward_crossing_mean(stations_df, Wert):
     average = np.mean(stations_df[Wert])
     #get first downward crossing of average
     #case 1: first value is already less than average
-    if stations_df[Wert][15] > average:
+    if stations_df[Wert][0] > average:
         first_downward_crossing = stations_df[stations_df[Wert] < average].index[0]
 
     #case 2: first value is greater than average
@@ -229,7 +229,7 @@ def get_time_first_upward_crossing_highquantile(stations_df, Wert):
     #get first upward crossing of average
     #case 1: first value is already greater than average
 
-    if stations_df[Wert][15] < quantile:
+    if stations_df[Wert][0] < quantile:
         first_upward_crossing = stations_df[stations_df[Wert] > quantile].index[0]
 
     #case 2: first value is greater than average
@@ -244,7 +244,7 @@ def get_time_first_downward_crossing_highquantile(stations_df, Wert):
     quantile = (np.max(stations_df[Wert]) - np.min(stations_df[Wert])) * 0.75 + np.min(stations_df[Wert])
 
     
-    if stations_df[Wert][15] > quantile:
+    if stations_df[Wert][0] > quantile:
         first_downward_crossing = stations_df[stations_df[Wert] < quantile].index[0]
 
     #case 2: first value is greater than average
@@ -258,7 +258,7 @@ def get_time_first_downward_crossing_highquantile(stations_df, Wert):
 def get_time_first_upward_crossing_lowquantile(stations_df, Wert):
     quantile = (np.max(stations_df[Wert]) - np.min(stations_df[Wert])) * 0.25 + np.min(stations_df[Wert])
     #get first upward crossing of average
-    if stations_df[Wert][15] < quantile:
+    if stations_df[Wert][0] < quantile:
         first_upward_crossing = stations_df[stations_df[Wert] > quantile].index[0]
 
     #case 2: first value is greater than average
@@ -273,7 +273,7 @@ def get_time_first_downward_crossing_lowquantile(stations_df, Wert):
     quantile = (np.max(stations_df[Wert]) - np.min(stations_df[Wert])) * 0.25 + np.min(stations_df[Wert])
 
     
-    if stations_df[Wert][15] > quantile:
+    if stations_df[Wert][0] > quantile:
         first_downward_crossing = stations_df[stations_df[Wert] < quantile].index[0]
 
     #case 2: first value is greater than average

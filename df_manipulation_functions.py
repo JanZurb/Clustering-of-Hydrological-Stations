@@ -9,7 +9,7 @@ import seaborn as sns
 import numpy as np
 from sklearn.metrics.pairwise import manhattan_distances, euclidean_distances
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
-
+from sklearn.preprocessing import RobustScaler
 
 
 
@@ -76,18 +76,56 @@ def get_running_mean_df(station_number, window, flow_temp_data, Wert):
     return expanded_data
 
 
+# def normalize_data(df):
+#     result = df.copy()
+#     for feature_name in df.columns:
+#         #exclude feature_names that include 'day' or 'time' string
+#         if feature_name.find('day') != -1 or feature_name.find('Stationsnummer')!= -1:
+#             continue
+#         max_value = df[feature_name].max()
+#         min_value = df[feature_name].min()
+#         mean_value = df[feature_name].mean()
+#         std_value = df[feature_name].std()
+#         result[feature_name] = (df[feature_name] - mean_value) / (std_value)
+#     return result
+
+
+# version with robust scaler
 def normalize_data(df):
-    result = df.copy()
+    #remove Stationsnummer column
+    stationsnummer = df['Stationsnummer']
+    day_df = pd.DataFrame()
+    df = df.drop(['Stationsnummer'], axis=1)
+    #remove the day columns as they are already normalized
     for feature_name in df.columns:
         #exclude feature_names that include 'day' or 'time' string
-        if feature_name.find('day') != -1 or feature_name.find('Stationsnummer')!= -1:
+        if feature_name.find('day') != -1:
+            #create df with all the day columns
+            day_df[feature_name] = df[feature_name]
+            df.drop([feature_name], axis=1, inplace=True)
             continue
-        max_value = df[feature_name].max()
-        min_value = df[feature_name].min()
-        mean_value = df[feature_name].mean()
-        std_value = df[feature_name].std()
-        result[feature_name] = (df[feature_name] - mean_value) / (std_value)
-    return result
+    #use robust scalar ro normalize the data
+    robust_scaler = RobustScaler()
+    robust_scaler.fit(df)
+    normalized_data = robust_scaler.transform(df)
+    normalized_data = pd.DataFrame(normalized_data, columns=df.columns)
+    #add the day columns again
+    normalized_data = pd.concat([normalized_data, day_df], axis=1)
+    normalized_data['Stationsnummer'] = stationsnummer
+    return normalized_data
+
+def robust_normalize_data(df):
+    #remove Stationsnummer column
+    stationsnummer = df['Stationsnummer']
+    df = df.drop(['Stationsnummer'], axis=1)
+    #make use of the robust scaler from sklearn
+    robust_scaler = RobustScaler()
+    robust_scaler.fit(df)
+    normalized_data = robust_scaler.transform(df)
+    normalized_data = pd.DataFrame(normalized_data, columns=df.columns)
+
+    normalized_data['Stationsnummer'] = stationsnummer
+    return normalized_data
 
 def force_normalize_data(df):
     result = df.copy()

@@ -235,46 +235,81 @@ def get_time_above_average(station_df, Wert):
 def get_time_first_upward_crossing_mean(stations_df, Wert):
     #calculate average
     average = np.mean(stations_df[Wert])
+    #get first upward crossing after minimum
+    day_of_minimum = get_day_of_min(stations_df, Wert)
+    #slice df from day of minimum onwards
+    before_minimum = stations_df.iloc[:day_of_minimum]
+    after_minimum = stations_df.iloc[day_of_minimum:]
+    #reconnect the two dfs with after_minimum first
+    stations_df_reordered = pd.concat([after_minimum, before_minimum])
+    #reduce the df to only entries greater than the average
+    stations_df_greater_than_average = stations_df_reordered[stations_df_reordered[Wert] > average]
+    #get the original index of the first entry greater than the average
+    first_upward_crossing_after_min = stations_df_greater_than_average.index[0]
     
-    #get first upward crossing of average
-    #case 1: first value is already greater than average
-    if stations_df[Wert][0] < average:
-        first_upward_crossing = stations_df[stations_df[Wert] > average].index[0]
+    return first_upward_crossing_after_min
 
-    #case 2: first value is greater than average
-    else:
-        first_upward_crossing = stations_df[stations_df[Wert] < average].index[-1]
-    return first_upward_crossing
 
+
+# def get_time_first_upward_crossing_mean(stations_df, Wert):
+#     #calculate average
+#     average = np.mean(stations_df[Wert])
     
+#     #get first upward crossing of average
+#     #case 1: first value is already greater than average
+#     if stations_df[Wert][0] < average:
+#         first_upward_crossing = stations_df[stations_df[Wert] > average].index[0]
+
+#     #case 2: first value is greater than average
+#     else:
+#         first_upward_crossing = stations_df[stations_df[Wert] < average].index[-1]
+#     return first_upward_crossing
+
 def get_time_first_downward_crossing_mean(stations_df, Wert):
     #calculate average
     average = np.mean(stations_df[Wert])
-    #get first downward crossing of average
-    #case 1: first value is already less than average
-    if stations_df[Wert][0] > average:
-        first_downward_crossing = stations_df[stations_df[Wert] < average].index[0]
+    day_of_maximum = get_day_of_max(stations_df, Wert)
 
-    #case 2: first value is greater than average
-    else:
-        first_downward_crossing = stations_df[stations_df[Wert] > average].index[-1]  
-    return first_downward_crossing
+    before_maximum = stations_df.iloc[:day_of_maximum]
+    after_maximum = stations_df.iloc[day_of_maximum:]
+    #reconnect the two dfs with after_minimum first
+    stations_df_reordered = pd.concat([after_maximum, before_maximum])
+    #reduce the df to only entries greater than the average
+    stations_df_greater_than_average = stations_df_reordered[stations_df_reordered[Wert] < average]
+    #get the original index of the first entry greater than the average
+    first_downward_crossing_after_max = stations_df_greater_than_average.index[0]
+    
+    return first_downward_crossing_after_max
+    
+# def get_time_first_downward_crossing_mean(stations_df, Wert):
+#     #calculate average
+#     average = np.mean(stations_df[Wert])
+#     #get first downward crossing of average
+#     #case 1: first value is already less than average
+#     if stations_df[Wert][0] > average:
+#         first_downward_crossing = stations_df[stations_df[Wert] < average].index[0]
+
+#     #case 2: first value is greater than average
+#     else:
+#         first_downward_crossing = stations_df[stations_df[Wert] > average].index[-1]  
+#     return first_downward_crossing
 
 def get_time_first_upward_crossing_highquantile(stations_df, Wert):
     
     #get value in station_df that is greater than 75% quantile
     quantile = (np.max(stations_df[Wert]) - np.min(stations_df[Wert])) * 0.75 + np.min(stations_df[Wert])
     #get first upward crossing of average
-    #case 1: first value is already greater than average
-
-    if stations_df[Wert][0] < quantile:
-        first_upward_crossing = stations_df[stations_df[Wert] > quantile].index[0]
-
-    #case 2: first value is greater than average
-    else:
-        first_upward_crossing = stations_df[stations_df[Wert] <= quantile].index[-1]
-    
-    return first_upward_crossing
+    day_of_minimum = get_day_of_min(stations_df, Wert)
+    #slice df from day of minimum onwards
+    before_minimum = stations_df.iloc[:day_of_minimum]
+    after_minimum = stations_df.iloc[day_of_minimum:]
+    #reconnect the two dfs with after_minimum first
+    stations_df_reordered = pd.concat([after_minimum, before_minimum])
+    #reduce the df to only entries greater than the average
+    stations_df_greater_than_average = stations_df_reordered[stations_df_reordered[Wert] > quantile]
+    #get the original index of the first entry greater than the average
+    first_upward_crossing_after_min = stations_df_greater_than_average.index[0]
+    return first_upward_crossing_after_min
 
 def get_time_first_downward_crossing_highquantile(stations_df, Wert):
     #calculate average
@@ -282,13 +317,18 @@ def get_time_first_downward_crossing_highquantile(stations_df, Wert):
     quantile = (np.max(stations_df[Wert]) - np.min(stations_df[Wert])) * 0.75 + np.min(stations_df[Wert])
 
     
-    if stations_df[Wert][0] > quantile:
-        first_downward_crossing = stations_df[stations_df[Wert] < quantile].index[0]
+    day_of_maximum = get_day_of_max(stations_df, Wert)
 
-    #case 2: first value is greater than average
-    else:
-        first_downward_crossing = stations_df[stations_df[Wert] > quantile].index[-1]
-    return first_downward_crossing
+    before_maximum = stations_df.iloc[:day_of_maximum]
+    after_maximum = stations_df.iloc[day_of_maximum:]
+    #reconnect the two dfs with after_minimum first
+    stations_df_reordered = pd.concat([after_maximum, before_maximum])
+    #reduce the df to only entries greater than the average
+    stations_df_greater_than_average = stations_df_reordered[stations_df_reordered[Wert] < quantile]
+    #get the original index of the first entry greater than the average
+    first_downward_crossing_after_max = stations_df_greater_than_average.index[0]
+    
+    return first_downward_crossing_after_max
 
 
 
@@ -296,14 +336,17 @@ def get_time_first_downward_crossing_highquantile(stations_df, Wert):
 def get_time_first_upward_crossing_lowquantile(stations_df, Wert):
     quantile = (np.max(stations_df[Wert]) - np.min(stations_df[Wert])) * 0.25 + np.min(stations_df[Wert])
     #get first upward crossing of average
-    if stations_df[Wert][0] < quantile:
-        first_upward_crossing = stations_df[stations_df[Wert] > quantile].index[0]
-
-    #case 2: first value is greater than average
-    else:
-        first_upward_crossing = stations_df[stations_df[Wert] < quantile].index[-1]
-    
-    return first_upward_crossing
+    day_of_minimum = get_day_of_min(stations_df, Wert)
+    #slice df from day of minimum onwards
+    before_minimum = stations_df.iloc[:day_of_minimum]
+    after_minimum = stations_df.iloc[day_of_minimum:]
+    #reconnect the two dfs with after_minimum first
+    stations_df_reordered = pd.concat([after_minimum, before_minimum])
+    #reduce the df to only entries greater than the average
+    stations_df_greater_than_average = stations_df_reordered[stations_df_reordered[Wert] > quantile]
+    #get the original index of the first entry greater than the average
+    first_upward_crossing_after_min = stations_df_greater_than_average.index[0]
+    return first_upward_crossing_after_min
 
 def get_time_first_downward_crossing_lowquantile(stations_df, Wert):
     #calculate average
@@ -311,13 +354,18 @@ def get_time_first_downward_crossing_lowquantile(stations_df, Wert):
     quantile = (np.max(stations_df[Wert]) - np.min(stations_df[Wert])) * 0.25 + np.min(stations_df[Wert])
 
     
-    if stations_df[Wert][0] > quantile:
-        first_downward_crossing = stations_df[stations_df[Wert] < quantile].index[0]
+    day_of_maximum = get_day_of_max(stations_df, Wert)
 
-    #case 2: first value is greater than average
-    else:
-        first_downward_crossing = stations_df[stations_df[Wert] > quantile].index[-1]
-    return first_downward_crossing
+    before_maximum = stations_df.iloc[:day_of_maximum]
+    after_maximum = stations_df.iloc[day_of_maximum:]
+    #reconnect the two dfs with after_minimum first
+    stations_df_reordered = pd.concat([after_maximum, before_maximum])
+    #reduce the df to only entries greater than the average
+    stations_df_greater_than_average = stations_df_reordered[stations_df_reordered[Wert] < quantile]
+    #get the original index of the first entry greater than the average
+    first_downward_crossing_after_max = stations_df_greater_than_average.index[0]
+    
+    return first_downward_crossing_after_max
 
     
 

@@ -21,7 +21,7 @@ def hierarchical_clustering(features_df, normalized_data, lower_bound, num_clust
 
     # hierarchical clustering
     for k in range(lower_bound, num_clusters + lower_bound):
-        agg = AgglomerativeClustering(linkage="complete", n_clusters=k)
+        agg = AgglomerativeClustering(linkage="ward", n_clusters=k)
         assignment = agg.fit_predict(normalized_data)
 
         #save assignment to df cluster_labels_hierachical

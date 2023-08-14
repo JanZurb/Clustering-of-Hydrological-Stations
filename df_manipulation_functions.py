@@ -362,3 +362,37 @@ def get_sin_cos_rep(day_feature):
 
     return sin,cos
 
+#score functions
+def get_max_and_num_clust(scores):
+    #reduce scores entries to 20 scores is a df with two columns
+    scores = scores.iloc[2:19]
+    max_score = max(scores['silhouette_score'])
+    id = scores['silhouette_score'].idxmax()
+    num_clust = scores.loc[id]['num_clusters']
+    return max_score, num_clust
+
+def get_min_and_num_clust(scores):
+    scores = scores.iloc[2:19]
+    min_score = min(scores['davies_bouldin_score'])
+    id = scores['davies_bouldin_score'].idxmin()
+    num_clust = scores.loc[id]['num_clusters']
+    return min_score, num_clust
+
+def get_best_score(scores, score_name):
+    if score_name == 'silhouette':
+        scores = scores.iloc[2:19]
+        max_score = max(scores['silhouette_score'])
+        id = scores['silhouette_score'].idxmax()
+        num_clust = scores.loc[id]['num_clusters']
+        return max_score, num_clust
+        
+    elif score_name == 'davies_bouldin':
+        scores = scores.iloc[2:19]
+        min_score = min(scores['davies_bouldin_score'])
+        id = scores['davies_bouldin_score'].idxmin()
+        num_clust = scores.loc[id]['num_clusters']
+        return min_score, num_clust
+
+    else:
+        print('wrong score_name')
+        return None, None

@@ -9,7 +9,7 @@ import seaborn as sns
 import numpy as np
 from sklearn.metrics.pairwise import manhattan_distances, euclidean_distances
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
-
+from sklearn.preprocessing import RobustScaler
 
 
 
@@ -69,22 +69,63 @@ def get_daily_averaged_df(station_number, flow_temp_data):
 
 def get_running_mean_df(station_number, window, flow_temp_data, Wert):
     daily_averaged_data = get_daily_averaged_df(station_number, flow_temp_data)
+    #add the last 15 days of the year to the beginning of the year
+    expanded_data = daily_averaged_data.iloc[-window+1:].append(daily_averaged_data)  
     daily_averaged_data[Wert] = daily_averaged_data[Wert].rolling(window=window).mean()
-    return daily_averaged_data
+    expanded_data = expanded_data.rolling(window=window).mean().dropna().reset_index(drop=True)
+    return expanded_data
 
 
+# def normalize_data(df):
+#     result = df.copy()
+#     for feature_name in df.columns:
+#         #exclude feature_names that include 'day' or 'time' string
+#         if feature_name.find('day') != -1 or feature_name.find('Stationsnummer')!= -1:
+#             continue
+#         max_value = df[feature_name].max()
+#         min_value = df[feature_name].min()
+#         mean_value = df[feature_name].mean()
+#         std_value = df[feature_name].std()
+#         result[feature_name] = (df[feature_name] - mean_value) / (std_value)
+#     return result
+
+
+# version with robust scaler
 def normalize_data(df):
-    result = df.copy()
+    #remove Stationsnummer column
+    stationsnummer = df['Stationsnummer']
+    day_df = pd.DataFrame()
+    df = df.drop(['Stationsnummer'], axis=1)
+    #remove the day columns as they are already normalized
     for feature_name in df.columns:
         #exclude feature_names that include 'day' or 'time' string
-        if feature_name.find('day') != -1 or feature_name.find('Stationsnummer')!= -1:
+        if feature_name.find('day') != -1:
+            #create df with all the day columns
+            day_df[feature_name] = df[feature_name]
+            df.drop([feature_name], axis=1, inplace=True)
             continue
-        max_value = df[feature_name].max()
-        min_value = df[feature_name].min()
-        mean_value = df[feature_name].mean()
-        std_value = df[feature_name].std()
-        result[feature_name] = (df[feature_name] - mean_value) / (std_value)
-    return result
+    #use robust scalar ro normalize the data
+    robust_scaler = RobustScaler(quantile_range=(5,95))
+    robust_scaler.fit(df)
+    normalized_data = robust_scaler.transform(df)
+    normalized_data = pd.DataFrame(normalized_data, columns=df.columns)
+    #add the day columns again
+    normalized_data = pd.concat([normalized_data, day_df], axis=1)
+    normalized_data['Stationsnummer'] = stationsnummer
+    return normalized_data
+
+def robust_normalize_data(df):
+    #remove Stationsnummer column
+    stationsnummer = df['Stationsnummer']
+    df = df.drop(['Stationsnummer'], axis=1)
+    #make use of the robust scaler from sklearn
+    robust_scaler = RobustScaler()
+    robust_scaler.fit(df)
+    normalized_data = robust_scaler.transform(df)
+    normalized_data = pd.DataFrame(normalized_data, columns=df.columns)
+
+    normalized_data['Stationsnummer'] = stationsnummer
+    return normalized_data
 
 def force_normalize_data(df):
     result = df.copy()
@@ -121,25 +162,12 @@ def get_similarity_to_mean_year(original_station_data, Wert):
     
     #calculate mean year
     mean_year = get_daily_averaged_df(original_station_data['Stationsnummer'].iloc[0], original_station_data)
-    
-    #shorten mean year to 365 days
-    # mean_year = mean_year.iloc[:360]
-
-
     original_station_data['Zeitstempel'] = pd.to_datetime(original_station_data.Zeitstempel)
-    
     #calculate similarity of each year to the mean year
     sum_of_differences = 0
-    # group the original data by year
-    
     for year, group in original_station_data.groupby(original_station_data.Zeitstempel.dt.year):
-        # calculate difference between each day of the year and the mean year
-        # shorten every year to 365 days
-        # group = group.iloc[:360]
-        #calculate the difference with being sensible to difference in array length
         difference = np.sum(np.abs(group[Wert].values - mean_year[Wert].values[:len(group[Wert].values)])) 
         difference = difference/mean_year[Wert].values[:len(group[Wert].values)].mean()
-        # add these differences to the sum of differences
         sum_of_differences = sum_of_differences+difference
     return sum_of_differences
 
@@ -194,46 +222,81 @@ def get_time_above_average(station_df, Wert):
 def get_time_first_upward_crossing_mean(stations_df, Wert):
     #calculate average
     average = np.mean(stations_df[Wert])
+    #get first upward crossing after minimum
+    day_of_minimum = get_day_of_min(stations_df, Wert)
+    #slice df from day of minimum onwards
+    before_minimum = stations_df.iloc[:day_of_minimum]
+    after_minimum = stations_df.iloc[day_of_minimum:]
+    #reconnect the two dfs with after_minimum first
+    stations_df_reordered = pd.concat([after_minimum, before_minimum])
+    #reduce the df to only entries greater than the average
+    stations_df_greater_than_average = stations_df_reordered[stations_df_reordered[Wert] > average]
+    #get the original index of the first entry greater than the average
+    first_upward_crossing_after_min = stations_df_greater_than_average.index[0]
     
-    #get first upward crossing of average
-    #case 1: first value is already greater than average
-    if stations_df[Wert][15] < average:
-        first_upward_crossing = stations_df[stations_df[Wert] > average].index[0]
+    return first_upward_crossing_after_min
 
-    #case 2: first value is greater than average
-    else:
-        first_upward_crossing = stations_df[stations_df[Wert] < average].index[-1]
-    return first_upward_crossing
 
+
+# def get_time_first_upward_crossing_mean(stations_df, Wert):
+#     #calculate average
+#     average = np.mean(stations_df[Wert])
     
+#     #get first upward crossing of average
+#     #case 1: first value is already greater than average
+#     if stations_df[Wert][0] < average:
+#         first_upward_crossing = stations_df[stations_df[Wert] > average].index[0]
+
+#     #case 2: first value is greater than average
+#     else:
+#         first_upward_crossing = stations_df[stations_df[Wert] < average].index[-1]
+#     return first_upward_crossing
+
 def get_time_first_downward_crossing_mean(stations_df, Wert):
     #calculate average
     average = np.mean(stations_df[Wert])
-    #get first downward crossing of average
-    #case 1: first value is already less than average
-    if stations_df[Wert][15] > average:
-        first_downward_crossing = stations_df[stations_df[Wert] < average].index[0]
+    day_of_maximum = get_day_of_max(stations_df, Wert)
 
-    #case 2: first value is greater than average
-    else:
-        first_downward_crossing = stations_df[stations_df[Wert] > average].index[-1]  
-    return first_downward_crossing
+    before_maximum = stations_df.iloc[:day_of_maximum]
+    after_maximum = stations_df.iloc[day_of_maximum:]
+    #reconnect the two dfs with after_minimum first
+    stations_df_reordered = pd.concat([after_maximum, before_maximum])
+    #reduce the df to only entries greater than the average
+    stations_df_greater_than_average = stations_df_reordered[stations_df_reordered[Wert] < average]
+    #get the original index of the first entry greater than the average
+    first_downward_crossing_after_max = stations_df_greater_than_average.index[0]
+    
+    return first_downward_crossing_after_max
+    
+# def get_time_first_downward_crossing_mean(stations_df, Wert):
+#     #calculate average
+#     average = np.mean(stations_df[Wert])
+#     #get first downward crossing of average
+#     #case 1: first value is already less than average
+#     if stations_df[Wert][0] > average:
+#         first_downward_crossing = stations_df[stations_df[Wert] < average].index[0]
+
+#     #case 2: first value is greater than average
+#     else:
+#         first_downward_crossing = stations_df[stations_df[Wert] > average].index[-1]  
+#     return first_downward_crossing
 
 def get_time_first_upward_crossing_highquantile(stations_df, Wert):
     
     #get value in station_df that is greater than 75% quantile
     quantile = (np.max(stations_df[Wert]) - np.min(stations_df[Wert])) * 0.75 + np.min(stations_df[Wert])
     #get first upward crossing of average
-    #case 1: first value is already greater than average
-
-    if stations_df[Wert][15] < quantile:
-        first_upward_crossing = stations_df[stations_df[Wert] > quantile].index[0]
-
-    #case 2: first value is greater than average
-    else:
-        first_upward_crossing = stations_df[stations_df[Wert] <= quantile].index[-1]
-    
-    return first_upward_crossing
+    day_of_minimum = get_day_of_min(stations_df, Wert)
+    #slice df from day of minimum onwards
+    before_minimum = stations_df.iloc[:day_of_minimum]
+    after_minimum = stations_df.iloc[day_of_minimum:]
+    #reconnect the two dfs with after_minimum first
+    stations_df_reordered = pd.concat([after_minimum, before_minimum])
+    #reduce the df to only entries greater than the average
+    stations_df_greater_than_average = stations_df_reordered[stations_df_reordered[Wert] > quantile]
+    #get the original index of the first entry greater than the average
+    first_upward_crossing_after_min = stations_df_greater_than_average.index[0]
+    return first_upward_crossing_after_min
 
 def get_time_first_downward_crossing_highquantile(stations_df, Wert):
     #calculate average
@@ -241,13 +304,18 @@ def get_time_first_downward_crossing_highquantile(stations_df, Wert):
     quantile = (np.max(stations_df[Wert]) - np.min(stations_df[Wert])) * 0.75 + np.min(stations_df[Wert])
 
     
-    if stations_df[Wert][15] > quantile:
-        first_downward_crossing = stations_df[stations_df[Wert] < quantile].index[0]
+    day_of_maximum = get_day_of_max(stations_df, Wert)
 
-    #case 2: first value is greater than average
-    else:
-        first_downward_crossing = stations_df[stations_df[Wert] > quantile].index[-1]
-    return first_downward_crossing
+    before_maximum = stations_df.iloc[:day_of_maximum]
+    after_maximum = stations_df.iloc[day_of_maximum:]
+    #reconnect the two dfs with after_minimum first
+    stations_df_reordered = pd.concat([after_maximum, before_maximum])
+    #reduce the df to only entries greater than the average
+    stations_df_greater_than_average = stations_df_reordered[stations_df_reordered[Wert] < quantile]
+    #get the original index of the first entry greater than the average
+    first_downward_crossing_after_max = stations_df_greater_than_average.index[0]
+    
+    return first_downward_crossing_after_max
 
 
 
@@ -255,14 +323,17 @@ def get_time_first_downward_crossing_highquantile(stations_df, Wert):
 def get_time_first_upward_crossing_lowquantile(stations_df, Wert):
     quantile = (np.max(stations_df[Wert]) - np.min(stations_df[Wert])) * 0.25 + np.min(stations_df[Wert])
     #get first upward crossing of average
-    if stations_df[Wert][15] < quantile:
-        first_upward_crossing = stations_df[stations_df[Wert] > quantile].index[0]
-
-    #case 2: first value is greater than average
-    else:
-        first_upward_crossing = stations_df[stations_df[Wert] < quantile].index[-1]
-    
-    return first_upward_crossing
+    day_of_minimum = get_day_of_min(stations_df, Wert)
+    #slice df from day of minimum onwards
+    before_minimum = stations_df.iloc[:day_of_minimum]
+    after_minimum = stations_df.iloc[day_of_minimum:]
+    #reconnect the two dfs with after_minimum first
+    stations_df_reordered = pd.concat([after_minimum, before_minimum])
+    #reduce the df to only entries greater than the average
+    stations_df_greater_than_average = stations_df_reordered[stations_df_reordered[Wert] > quantile]
+    #get the original index of the first entry greater than the average
+    first_upward_crossing_after_min = stations_df_greater_than_average.index[0]
+    return first_upward_crossing_after_min
 
 def get_time_first_downward_crossing_lowquantile(stations_df, Wert):
     #calculate average
@@ -270,13 +341,18 @@ def get_time_first_downward_crossing_lowquantile(stations_df, Wert):
     quantile = (np.max(stations_df[Wert]) - np.min(stations_df[Wert])) * 0.25 + np.min(stations_df[Wert])
 
     
-    if stations_df[Wert][15] > quantile:
-        first_downward_crossing = stations_df[stations_df[Wert] < quantile].index[0]
+    day_of_maximum = get_day_of_max(stations_df, Wert)
 
-    #case 2: first value is greater than average
-    else:
-        first_downward_crossing = stations_df[stations_df[Wert] > quantile].index[-1]
-    return first_downward_crossing
+    before_maximum = stations_df.iloc[:day_of_maximum]
+    after_maximum = stations_df.iloc[day_of_maximum:]
+    #reconnect the two dfs with after_minimum first
+    stations_df_reordered = pd.concat([after_maximum, before_maximum])
+    #reduce the df to only entries greater than the average
+    stations_df_greater_than_average = stations_df_reordered[stations_df_reordered[Wert] < quantile]
+    #get the original index of the first entry greater than the average
+    first_downward_crossing_after_max = stations_df_greater_than_average.index[0]
+    
+    return first_downward_crossing_after_max
 
     
 
@@ -286,3 +362,37 @@ def get_sin_cos_rep(day_feature):
 
     return sin,cos
 
+#score functions
+def get_max_and_num_clust(scores):
+    #reduce scores entries to 20 scores is a df with two columns
+    scores = scores.iloc[2:19]
+    max_score = max(scores['silhouette_score'])
+    id = scores['silhouette_score'].idxmax()
+    num_clust = scores.loc[id]['num_clusters']
+    return max_score, num_clust
+
+def get_min_and_num_clust(scores):
+    scores = scores.iloc[2:19]
+    min_score = min(scores['davies_bouldin_score'])
+    id = scores['davies_bouldin_score'].idxmin()
+    num_clust = scores.loc[id]['num_clusters']
+    return min_score, num_clust
+
+def get_best_score(scores, score_name):
+    if score_name == 'silhouette':
+        scores = scores.iloc[2:14]
+        max_score = max(scores['silhouette_score'])
+        id = scores['silhouette_score'].idxmax()
+        num_clust = scores.loc[id]['num_clusters']
+        return max_score, num_clust
+        
+    elif score_name == 'davies_bouldin':
+        scores = scores.iloc[2:14]
+        min_score = min(scores['davies_bouldin_score'])
+        id = scores['davies_bouldin_score'].idxmin()
+        num_clust = scores.loc[id]['num_clusters']
+        return min_score, num_clust
+
+    else:
+        print('wrong score_name')
+        return None, None

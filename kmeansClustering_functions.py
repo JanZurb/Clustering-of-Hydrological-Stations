@@ -16,7 +16,7 @@ def kmeans_clustering (features_df, normalized_data, lower_bound, num_clusters):
 
 
     for cluster in range(lower_bound, lower_bound + num_clusters):
-        km = KMeans(n_clusters=cluster, init='random', n_init=10, max_iter=300, tol=1e-04, random_state=0)
+        km = KMeans(n_clusters=cluster, init='k-means++', n_init=10, max_iter=300, tol=1e-04, random_state=0)
         assignment = km.fit_predict(normalized_data)
         #add cluster label to the normalized data in a new column called num_clusters clusters
         cluster_labels_kmeans[str(cluster) + ' clusters']= assignment
